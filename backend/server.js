@@ -7,7 +7,10 @@ const PORT = process.env.PORT || 4000;
 //MIDDLEWAREs
 app.use(cors());
 
+//DB
 
+
+//ROUTES
 app.get('/', (req, res) => {
   res.send('Hello from the backend server!');
 });
