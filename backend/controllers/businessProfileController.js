@@ -1,5 +1,6 @@
 import { getAuth } from "@clerk/express";
 import BusinessProfile from "../models/businessProfileModel";
+import { data } from "react-router-dom";
 
 const API_BASE = 'http://localhost:4000'
 
@@ -21,6 +22,35 @@ function uploadedFilesToUrls(req) {
 //create a business profile
 
 export async function name(req, res) {
-    
-    
+
+    try {
+        const {userId} = getAuth(req);
+        if(!userId){
+            return res.status(401).json({success:false, message:"Authentication Reqquired"})
+        }
+
+        const body = req.body || {};
+        const fileUrls= uploadedFilesToUrls(req);
+
+         const profile = new BusinessProfile({
+      owner: userId,
+      businessName: body.businessName || "ABC Solutions",
+      email: body.email || "",
+      address: body.address || "",
+      phone: body.phone || "",
+      gst: body.gst || "",
+      logoUrl: fileUrls.logoUrl || body.logoUrl || null,
+      stampUrl: fileUrls.stampUrl || body.stampUrl || null,
+      signatureUrl: fileUrls.signatureUrl || body.signatureUrl || null,
+      signatureOwnerName: body.signatureOwnerName || "",
+      signatureOwnerTitle: body.signatureOwnerTitle || "",
+      defaultTaxPercent:
+        body.defaultTaxPercent !== undefined ? Number(body.defaultTaxPercent) : 18,
+    });
+
+        const saved = await profile.save();
+        return res.status(200).json({success: true, message: "Bussiness profile created successfully", data:saved})
+    } catch (error) {
+        
+    }
 }
