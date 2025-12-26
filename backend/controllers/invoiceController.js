@@ -221,3 +221,32 @@ export async function getInvoices(req, res){
         return res.status(500).json({ success: false, message: "Server error" });
     }
 }
+
+export async function getInvoiceById(req, res){
+    try {
+        const {userId} = getAuth (req) || {};   
+        if(!userId){
+            return res.status(401).json({success:false, message:"Authentication required"});
+        }   
+        const {id} = req.params;
+         
+        let inv;
+        
+        if(isObjectIdString(id)){
+            inv = await Invoice.findById(id)
+
+        }else{
+            inv = await Invoice.findOne({invoiceNumber: id})
+            };
+            if(!inv){
+                return res.status(404).json({success:false, message:"Invoice not found"});
+            }
+
+            if(inv.owner && String(inv.owner) !== userId){
+                return res.status(403).json({success:false, message:"Access denied"});
+            }
+    } catch (error) {
+        console.error("getInvoiceById error:", error);
+        return res.status(500).json({ success: false, message: "Server error" });
+    }       
+}
