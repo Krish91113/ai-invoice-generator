@@ -242,7 +242,7 @@ export async function getInvoiceById(req, res){
                 return res.status(404).json({success:false, message:"Invoice not found"});
             }
 
-            if(inv.owner && String(inv.owner) !== userId){
+            if(inv.owner && String(inv.owner) !== String(userId)){
                 return res.status(403).json({success:false, message:"Access denied"});
             }
     } catch (error) {
