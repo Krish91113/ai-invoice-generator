@@ -2,6 +2,7 @@ import express from "express";
 import { clerkMiddleware } from "@clerk/express";
 import multer from "multer";
 import path from "path"
+import { createBusinessProfile, getMyBusinessProfile, updateBusinessProfile } from "../controllers/businessProfileController.js";
 
 const businessProfileRouter = express.Router();
 
@@ -22,3 +23,22 @@ const storage = multer.diskStorage({
 const upload = multer({storage})
 
 //create eroute
+businessProfileRouter.post("/", 
+    upload.fields([
+        {name : "logoName", maxCount: 1},
+        {name : "stampName", maxCount: 1},
+        {name : "signatureNameMeta", maxCount: 1},
+    ]),
+    createBusinessProfile
+)
+//update
+businessProfileRouter.put("/:id",
+    upload.fields([
+        {name : "logoName", maxCount: 1},
+        {name : "stampName", maxCount: 1},
+        {name : "signatureNameMeta", maxCount: 1},
+    ]),
+    updateBusinessProfile  
+)
+businessProfileRouter.get("/me", getMyBusinessProfile)
+export default businessProfileRouter
