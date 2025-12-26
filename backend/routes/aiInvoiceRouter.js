@@ -1,18 +1,17 @@
-import express from "express"
-import { GoogleGenAI } from "@google/genai"
-import dotenv from "dotenv"
-import { model } from "mongoose";
-import { raw } from "body-parser";
+import express from "express";
+import { GoogleGenAI } from "@google/genai";
+import dotenv from "dotenv";
 
 dotenv.config();
 const aiInvoiceRouter = express.Router();
 
 const API_KEY = process.env.GEMINI_API_KEY;
-if(!API_KEY){
-    console.warn("No gemini api key found in .env")
+if (!API_KEY) {
+  console.warn("No gemini api key found in .env");
 }
 
 const ai = new GoogleGenAI({ apiKey: API_KEY });
+
 const MODEL_CANDIDATES = [
   "gemini-2.5-flash",
   "gemini-2.0-flash",
@@ -31,7 +30,7 @@ function buildInvoicePrompt(promptText) {
     client: { name: "", email: "", address: "", phone: "" },
     items: [{ id: "1", description: "", qty: 1, unitPrice: 0 }],
     taxPercent: 18,
-    notes: ""
+    notes: "",
   };
 
   return `
@@ -60,38 +59,9 @@ async function tryGenerateWithModel(modelName, prompt) {
 
   let text =
     (response && typeof response.text === "string" && response.text) ||
-    (response &&
-      response.output &&
-      Array.isArray(response.output) &&
-      response.output[0] &&
-      response.output[0].content &&
-      Array.isArray(response.output[0].content) &&
-      response.output[0].content[0] &&
-      response.output[0].content[0].text) ||
-    // alternate: response?.outputs?.[0]?.text
-    (response &&
-      response.outputs &&
-      Array.isArray(response.outputs) &&
-      response.outputs[0] &&
-      (response.outputs[0].text || response.outputs[0].content)) ||
-    // fallback: JSON-stringify the whole response (so we at least have something)
+    (response?.output?.[0]?.content?.[0]?.text) ||
+    (response?.outputs?.[0]?.text) ||
     null;
-
-  if (!text && response && Array.isArray(response.outputs)) {
-    const joined = response.outputs
-      .map((o) => {
-        if (!o) return "";
-        if (typeof o === "string") return o;
-        if (typeof o.text === "string") return o.text;
-        if (Array.isArray(o.content)) {
-          return o.content.map((c) => (c && c.text) || "").join("\n");
-        }
-        return JSON.stringify(o);
-      })
-      .filter(Boolean)
-      .join("\n\n");
-    if (joined) text = joined;
-  }
 
   if (!text && response) {
     try {
@@ -104,20 +74,39 @@ async function tryGenerateWithModel(modelName, prompt) {
   if (!text || !String(text).trim()) {
     throw new Error("Empty text returned from model");
   }
+
   return { text: String(text).trim(), modelName };
 }
 
+aiInvoiceRouter.post("/generate", async (req, res) => {
+  try {
+    if (!API_KEY) {
+      return res.status(500).json({
+        success: false,
+        message: "Server Configuration is failed as no key found",
+      });
+    }
 
-      let lastErr = null;
+    const { prompt } = req.body;
+    if (!prompt || !prompt.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Prompt rext required",
+      });
+    }
+
+    const fullPrompt = buildInvoicePrompt(prompt);
+
+    let lastErr = null;
     let lastText = null;
     let usedModel = null;
 
     for (const m of MODEL_CANDIDATES) {
       try {
-        const { text, modelName } = await tryGenerateWithModel(m, fullPrompt);
-        lastText = text;
-        usedModel = modelName;
-        if (text && text.trim()) break;
+        const result = await tryGenerateWithModel(m, fullPrompt);
+        lastText = result.text;
+        usedModel = result.modelName;
+        break;
       } catch (err) {
         console.warn(`Model ${m} failed:`, err?.message || err);
         lastErr = err;
@@ -127,120 +116,63 @@ async function tryGenerateWithModel(modelName, prompt) {
 
     if (!lastText) {
       const errMsg =
-        (lastErr && lastErr.message) ||
+        lastErr?.message ||
         "All candidate models failed. Check API key, network, or model availability.";
       console.error("AI generation failed (no text):", errMsg);
       return res.status(502).json({
         success: false,
         message: "AI generation failed",
-        detail: errMsg
+        detail: errMsg,
       });
     }
 
     const text = lastText.trim();
     const firstBrace = text.indexOf("{");
     const lastBrace = text.lastIndexOf("}");
+
     if (firstBrace === -1 || lastBrace === -1 || lastBrace <= firstBrace) {
       console.error("AI response did not contain JSON object:", {
         usedModel,
-        text
+        text,
       });
       return res.status(502).json({
         success: false,
         message: "AI returned malformed response (no JSON found)",
         raw: text,
-        model: usedModel
+        model: usedModel,
       });
     }
 
-aiInvoiceRouter.post('/generate', async(req,res)=>{
-    try {
-        if(!API_KEY){
-            return res.status(500).json({success:false, message:"Server Configuration is failed as no key found"})
-        }
-        const {prompt} = req.body;
-        if(!prompt || prompt.trim()){
-            return res.status(400).json({
-                success:false,
-                message :"Prompt rext required"
-            })
-        }
-        const fullPrompt = buildInvoicePrompt(prompt);
-        
-      let lastErr = null;
-    let lastText = null;
-    let usedModel = null;
-
-    for (const m of MODEL_CANDIDATES) {
-      try {
-        const { text, modelName } = await tryGenerateWithModel(m, fullPrompt);
-        lastText = text;
-        usedModel = modelName;
-        if (text && text.trim()) break;
-      } catch (err) {
-        console.warn(`Model ${m} failed:`, err?.message || err);
-        lastErr = err;
-        continue;
-      }
-    }
-
-    if (!lastText) {
-      const errMsg =
-        (lastErr && lastErr.message) ||
-        "All candidate models failed. Check API key, network, or model availability.";
-      console.error("AI generation failed (no text):", errMsg);
-      return res.status(502).json({
-        success: false,
-        message: "AI generation failed",
-        detail: errMsg
-      });
-    }
-
-    const text = lastText.trim();
-    const firstBrace = text.indexOf("{");
-    const lastBrace = text.lastIndexOf("}");
-    if (firstBrace === -1 || lastBrace === -1 || lastBrace <= firstBrace) {
-      console.error("AI response did not contain JSON object:", {
-        usedModel,
-        text
-      });
-      return res.status(502).json({
-        success: false,
-        message: "AI returned malformed response (no JSON found)",
-        raw: text,
-        model: usedModel
-      });
-    }
     const jsonText = text.slice(firstBrace, lastBrace + 1);
     let data;
     try {
-        data = JSON.parse(jsonText);
+      data = JSON.parse(jsonText);
     } catch (error) {
-        console.error("failed to parse jso data from ai response", error,
-           { model:usedModel,
-            jsonText
-           }
-        );
-        return res.status(502).json({
-            success: false,
-            message:"Ai return invalid json",
-            model : usedModel,
-            raw:text
-        })
+      console.error("failed to parse jso data from ai response", error, {
+        model: usedModel,
+        jsonText,
+      });
+      return res.status(502).json({
+        success: false,
+        message: "Ai return invalid json",
+        model: usedModel,
+        raw: text,
+      });
     }
-        return res.status(200).json({
-            success: true,
-            model:usedModel,
-            data
-        })
-    } catch (error) {
-        console.error("AI INvoice generation error", error)
-        return res.status(500).json({
-            success: false,
-            message : "Ai generation failed",
-            detail : err?.message || String(error)
-        })
-    }
+
+    return res.status(200).json({
+      success: true,
+      model: usedModel,
+      data,
+    });
+  } catch (error) {
+    console.error("AI INvoice generation error", error);
+    return res.status(500).json({
+      success: false,
+      message: "Ai generation failed",
+      detail: error.message || String(error),
+    });
+  }
 });
 
-export default aiInvoiceRouter
+export default aiInvoiceRouter;

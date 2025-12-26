@@ -6,6 +6,7 @@ import { connectDB } from './config/db.js';
 import path from 'path';
 import invoiceRouter from './routes/invoiceRouter.js';
 import businessProfileRouter from './routes/businessProfileRouter.js';
+import aiInvoiceRouter from './routes/aiInvoiceRouter.js';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -26,6 +27,8 @@ app.get('/', (req, res) => {
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 app.use('/api/invoice', invoiceRouter);
 app.use('/api/businessProfile',businessProfileRouter)
+app.use('/api/ai', aiInvoiceRouter)
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
