@@ -53,3 +53,15 @@ function uploadedFilesToUrls(req) {
   });
   return urls;
 }
+async function generateUniqueInvoiceNumber(attempts = 8) {
+  for (let i = 0; i < attempts; i++) {
+    const ts = Date.now().toString();
+    const suffix = Math.floor(Math.random() * 900000).toString().padStart(6, "0");
+    const candidate = `INV-${ts.slice(-6)}-${suffix}`;
+
+    const exists = await Invoice.exists({ invoiceNumber: candidate });
+    if (!exists) return candidate;
+    await new Promise((r) => setTimeout(r, 2));
+  }
+  return new mongoose.Types.ObjectId().toString();
+}
