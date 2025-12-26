@@ -1,13 +1,4 @@
-import React from 'react';
-  
-  const DummyStyles (1) = () =>  {
-	return (
-	  <div>
-	  </div>
-	);
-  }
-  
-  export default DummyStyles (1);
+
   // src/assets/dummyStyles.js
 export const aiInvoiceModalStyles = {
   overlay: "fixed inset-0 z-50 flex items-center justify-center p-4",
