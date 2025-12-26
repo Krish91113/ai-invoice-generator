@@ -108,7 +108,7 @@ export async function createInvoice(req, res) {
     // Build document
     const doc = new Invoice({
       _id: new mongoose.Types.ObjectId(),
-      owner: userId, // associate invoice with Clerk userId
+      owner: userId, 
       invoiceNumber,
       issueDate: body.issueDate || new Date().toISOString().slice(0, 10),
       dueDate: body.dueDate || "",
