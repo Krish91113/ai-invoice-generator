@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import Invoice from "../models/invoiceModel.js";
 import {getAuth} from '@clerk/express';
-
+import path from "path";
 const API_BASE ='http://localhost:4000'
 
 function computeTotals(items =[], taxPercent =0) {
@@ -338,8 +338,39 @@ export async function updateInvoice(req, res){
     return res.status(500).json({success:false, message:"Failed to update invoice"});
    }
         return  res.status(200).json({success:true, message:"Invoice updated", data: updated});
-    } catch (error) {
-        console.error("updateInvoice error:", error);
-        return res.status(500).json({ success: false, message: "Server error" });
+    } catch (err) {
+    console.error("updateInvoice error:", err);
+    if (err && err.code === 11000 && err.keyPattern && err.keyPattern.invoiceNumber) {
+      return res
+        .status(409)
+        .json({ success: false, message: "Invoice number already exists" });
     }
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+}
+
+//to delete an invoice
+
+export async function deleteInvoice(req, res){
+    try {
+        const {userId} = getAuth (req) || {};       
+        if(!userId){
+            return res.status(401).json({success:false, message:"Authentication required"});
+        }   
+        const {id} = req.params;
+        const query = isObjectIdString(id) ? {_id: id, owner: userId} : {invoiceNumber: id, owner: userId};
+        const found = await Invoice.findOne(query);
+        if(!found){
+            return res.status(404).json({success:false, message:"Invoice not found"});
+        }
+        await Invoice.deleteOne({_id: found._id});
+        const deleted = await Invoice.findById(found._id);
+        if(!deleted){
+            return res.status(404).json({success:false, message:"Invoice not found"});
+        }
+        return res.status(200).json({success:true, message:"Invoice deleted"});
+    } catch (error) {
+        console.error("deleteInvoice error:", error);
+        return res.status(500).json({ success: false, message: "Server error" });
+    }       
 }
