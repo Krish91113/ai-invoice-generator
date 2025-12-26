@@ -13,7 +13,7 @@ function computeTotals(items =[], taxPercent =0) {
 }
 
 //parse form data
-function parseItemFields(val){
+function parseItemsField(val){
     if(!val) return [];
     if(Array.isArray(val)) return val;
     if(typeof val === 'string'){
