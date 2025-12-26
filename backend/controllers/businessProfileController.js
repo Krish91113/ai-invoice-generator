@@ -51,6 +51,10 @@ export async function name(req, res) {
         const saved = await profile.save();
         return res.status(200).json({success: true, message: "Bussiness profile created successfully", data:saved})
     } catch (error) {
-        
+        console.log("create businessprofile error", error);
+        return res.status(500).json({
+            success : false,
+            message : "Server error"
+        })
     }
 }
