@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 import { navbarStyles } from '../assets/dummyStyles'
 import logo from '../assets/logo.png'
 import { Link, useNavigate } from 'react-router-dom'
-import {useAuth, useClerk, useUser} from '@clerk/clerk-react'
+import {SignedOut, useAuth, useClerk, useUser} from '@clerk/clerk-react'
 
 function NavBar() {
 
@@ -14,6 +14,9 @@ function NavBar() {
     const navigate = useNavigate();
     const profileRef = useRef(null);
     const TOKEN_KEY = "token";
+    
+
+    //functions
   return (
     <header className={navbarStyles.header}>
         <div className={navbarStyles.container}>
@@ -35,7 +38,11 @@ function NavBar() {
                 </div>
                 <div className='flex items-center gap-4'>
                     <div className={navbarStyles.authSection}>
-
+                        <SignedOut>
+                            <button onClick={openSignIn} className={navbarStyles.signInButton } type="button">
+                                Sign In
+                            </button>
+                        </SignedOut>
                     </div>
                 </div>
             </nav>
