@@ -1,10 +1,19 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import { navbarStyles } from '../assets/dummyStyles'
 import logo from '../assets/logo.png'
-import { Link } from 'react-router-dom'
-
+import { Link, useNavigate } from 'react-router-dom'
+import {useAuth, useClerk, useUser} from '@clerk/clerk-react'
 
 function NavBar() {
+
+    const [open, setOpen] = useState(false);
+    const [profileOpen, setProfileOpen]= useState(false);
+    const {user} = useUser();
+    const [getToken, isSignedIn] = useAuth();
+    const clerk = useClerk();
+    const navigate = useNavigate();
+    const profileRef = useRef(null);
+    const TOKEN_KEY = "token";
   return (
     <header className={navbarStyles.header}>
         <div className={navbarStyles.container}>
@@ -14,6 +23,20 @@ function NavBar() {
                         <img src={logo} alt="logo" className={navbarStyles.logoImage} />
                         <span className={navbarStyles.logoText}> Ai Invoice</span>
                     </Link>
+                    <div className={navbarStyles.desktopNav}>
+                        <a href="#features" className={navbarStyles.navLink}>
+                        Features
+                        </a>
+                        <a href="#pricing" className={navbarStyles.navLinkInactive}>
+                            Pricing
+                        </a>
+                    </div>
+
+                </div>
+                <div className='flex items-center gap-4'>
+                    <div className={navbarStyles.authSection}>
+
+                    </div>
                 </div>
             </nav>
         </div>
