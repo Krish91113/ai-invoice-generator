@@ -85,8 +85,10 @@ function NavBar() {
                 </button>
               </SignedOut>
             </div>
-            {/* MObile toggle view */}
-            
+            {/* MObile toggle view  */}
+            <button onClick={()=> setOpen(!open) } className={navbarStyles.mobileMenuButton}>
+                
+            </button>
           </div>
         </nav>
       </div>
