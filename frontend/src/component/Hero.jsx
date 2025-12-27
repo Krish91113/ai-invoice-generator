@@ -1,8 +1,10 @@
 import React from 'react'
-
+import { heroStyles } from '../assets/dummyStyles'
 function Hero() {
   return (
-    <div>Hero</div>
+    <section className={heroStyles.section}>
+        
+    </section>
   )
 }
 

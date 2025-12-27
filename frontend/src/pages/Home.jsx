@@ -8,7 +8,7 @@ function Home() {
       
       <NavBar/>
       <main className=''>
-      <Hero/>
+       <Hero/>
       </main>
     </div>
     
