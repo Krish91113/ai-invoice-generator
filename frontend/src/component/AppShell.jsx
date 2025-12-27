@@ -434,8 +434,14 @@ function AppShell() {
                     {firstName()}
                   </span>
                 </h2>
+                <p className={appShellStyles.welcomeSubtitle}> 
+                  Ready to create amazing Invoices
+                </p>
               </div>
             </div>
+          </div>
+          <div>
+            
           </div>
         </header>
         </div>
