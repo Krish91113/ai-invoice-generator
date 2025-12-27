@@ -448,6 +448,18 @@ function AppShell() {
                 </span>
                 <span className="xs:hidden"> Create </span>
               </button>
+              <div className={appShellStyles.userSectionDesktop}>
+                <div className={appShellStyles.userInfo}></div>
+                <div className={appShellStyles.userName}>{displayName}</div>
+                <div className={appShellStyles.userEmail}>{user?.email}</div>
+              </div>
+              <div className={appShellStyles.userAvatarContainer}>
+              <div className={appShellStyles.userAvatar}>
+                {initials()}
+                <div className={appShellStyles.userAvatarBorder}/>
+              </div>
+
+              </div>
           </div>
         </header>
         </div>
