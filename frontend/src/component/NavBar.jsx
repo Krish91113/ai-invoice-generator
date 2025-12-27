@@ -14,6 +14,9 @@ function NavBar() {
   const profileRef = useRef(null);
   const TOKEN_KEY = "token";
 
+  //
+
+
   //functions
   function openSignIn() {
     try {
@@ -110,6 +113,18 @@ function NavBar() {
                      <a href="#pricing" className={navbarStyles.mobileNavLink}>
                         Pricing
                     </a>
+                    <div className={navbarStyles.mobileAuthSection}>
+                        <SignedOut>
+                            <button onClick={openSignIn} className={navbarStyles.mobileSignIn}>
+                                Sign in
+                            </button>
+                        </SignedOut>
+                        <SignedOut>
+                            <button onClick={openSignUp} className={navbarStyles.mobileSignUp}>
+                                Sign Up
+                            </button>
+                        </SignedOut>
+                    </div>
             </div>
       </div>
     </header>
