@@ -443,6 +443,10 @@ function AppShell() {
           <div className={appShellStyles.headerActions}>
               <button onClick={()=> navigate('/app/create-invoice')} className={appShellStyles.ctaButton}>
                 <CreateIcon className={appShellStyles.ctaIcon}/>
+                <span className="hidde xs:inline">
+                  Create Invoice
+                </span>
+                <span className="xs:hidden"> Create </span>
               </button>
           </div>
         </header>
