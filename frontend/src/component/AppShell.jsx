@@ -5,8 +5,11 @@ import { appShellStyles } from '../assets/dummyStyles'
 function AppShell() {
   return (
     <div className={appShellStyles.root}>
-        <div>
-            
+        <div className={appShellStyles.layout}>
+            {/* sidebar */}
+            <aside className=''>
+
+            </aside>
         </div>
     </div>
   )
