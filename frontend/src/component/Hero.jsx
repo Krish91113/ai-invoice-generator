@@ -18,8 +18,23 @@ function Hero() {
                 </span>
               </div>
               {/* main heading */}
-              
+              <h1 className={heroStyles.heading}>
+                <span className={heroStyles.headingLine1}>Proffessional</span>
+                <br />
+               <span className={heroStyles.headingLine2}>Invoices</span>
+               <br />
+               <span className={heroStyles.headingLine3}>in Seconds</span>
+              </h1>
+              <p className={heroStyles.description}>
+                Transform conversations into professional invoices with AI.{" "}
+                <span className={heroStyles.descriptionHighlight}>
+                  Paste any text
+                </span>{" "}
+                and watch AI extract items, calculate totals, and generate
+                ready-to-send invoices instantly.
+              </p>
             </div>
+            {/*CTA BUTTONS */}
           </div>
         </div>
       </div>
