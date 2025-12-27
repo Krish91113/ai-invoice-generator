@@ -289,6 +289,14 @@ function AppShell() {
           </div>
         </aside>
         {/*mobile view */}
+        {mobileOpen && (
+          <div className={appShellStyles.mobileOverlay}>
+              <div className={appShellStyles.mobileBackdrop} onClick={()=> setMobileOpen(false)}/>
+                <div className={appShellStyles}>
+
+                </div>
+            </div>
+        )}
       </div>
     </div>
   );
