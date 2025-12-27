@@ -64,6 +64,17 @@ useEffect(() => {
     };
 }, [isSignedIn, user, fetchAndStoreToken]); // Dependency array belongs to useEffect
 
+//if login then navigate to dashboard
+useEffect(()=>{
+    if(isSignedIn){
+        const pathname = window.location.pathname || "/";
+        if(
+            pathname === "/login" || pathname === "/signup" || pathname === "/" || pathname.startsWith("/auth")
+        ){
+            navigate("/app/dashboard", {replace:true})
+        }
+    }
+})
 
   //functions
   function openSignIn() {
