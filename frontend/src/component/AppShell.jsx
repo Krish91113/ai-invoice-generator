@@ -46,11 +46,14 @@ function AppShell() {
                         alt="logo"
                         className={appShellStyles.logoImage}
                       />
-                      <div className="absolute inset-0 rounded-lg blur-sm group-hover:blur-md transition-all duration-300">
+                      <div className="absolute inset-0 rounded-lg blur-sm group-hover:blur-md transition-all duration-300"/>
+                      
+                    </div>  
+                    {!collapsed && (
+                        <div >
 
-                      </div>
-                      {}
-                    </div>
+                        </div>
+                    )}
                   </Link>
                 </div>
               </div>
