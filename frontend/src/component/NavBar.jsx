@@ -87,7 +87,11 @@ function NavBar() {
             </div>
             {/* MObile toggle view  */}
             <button onClick={()=> setOpen(!open) } className={navbarStyles.mobileMenuButton}>
-                
+                <div className={navbarStyles.mobileMenuIcon}>
+                    <span className={`${navbarStyles.mobileMenuLine1} ${
+                        open ? navbarStyles.mobileMenuLine1Open : navbarStyles.mobileMenuLine1Closed
+                    }`}></span>
+                </div>
             </button>
           </div>
         </nav>
