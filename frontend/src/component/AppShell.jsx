@@ -389,7 +389,11 @@ function AppShell() {
         <header className={`${appShellStyles.header} ${
           scrolled ? appShellStyles.headerScrolled : appShellStyles.headerNotScrolled
         }`}>
-
+          <div className={appShellStyles.headerTopSection}>
+            <div className={appShellStyles.headerContent}>
+              
+            </div>
+          </div>
         </header>
         </div>
       </div>
