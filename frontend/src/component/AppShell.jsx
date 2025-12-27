@@ -440,8 +440,10 @@ function AppShell() {
               </div>
             </div>
           </div>
-          <div>
-            
+          <div className={appShellStyles.headerActions}>
+              <button onClick={()=> navigate('/app/create-invoice')} className={appShellStyles.ctaButton}>
+                <CreateIcon className={appShellStyles.ctaIcon}/>
+              </button>
           </div>
         </header>
         </div>
