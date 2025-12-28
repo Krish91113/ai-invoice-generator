@@ -1,157 +1,173 @@
 import React, { useState } from "react";
 import { pricingStyles, pricingCardStyles } from "../assets/dummyStyles";
-import { useAuth, useClerk } from "@clerk/clerk-react";
+import { SignedIn, SignedOut, useAuth, useClerk } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
+
 function Pricing() {
   const [billingPeriod, setBillingPeriod] = useState("monthly");
   const clerk = useClerk();
   const { isSignedIn } = useAuth();
   const navigate = useNavigate();
-  const pricingCard =({
+
+  const PricingCard = ({
     title,
-  price,
-  period,
-  description,
-  features = [],
-  isPopular = false,
-  isAnnual = false,
-  delay = 0,
-  onCtaClick,
-  })=>{
-    <div className={`${pricingCardStyles.card} ${
-        isPopular ? pricingCardStyles.cardPopular: pricingCardStyles.cardRegular
-    }`} style={`${delay}ms`}>
+    price,
+    period,
+    description,
+    features = [],
+    isPopular = false,
+    isAnnual = false,
+    delay = 0,
+    onCtaClick,
+  }) => {
+    return (
+      <div
+        className={`${pricingCardStyles.card} ${
+          isPopular ? pricingCardStyles.cardPopular : pricingCardStyles.cardRegular
+        }`}
+        style={{ animationDelay: `${delay}ms` }}
+      >
+        {/* Popular Badge */}
         {isPopular && (
-            <div className={pricingCardStyles.popularBadge}>
-                <div className={pricingCardStyles.popularBadgeContent}>
-            Most Popular
-                </div>
+          <div className={pricingCardStyles.popularBadge}>
+            <div className={pricingCardStyles.popularBadgeContent}>
+              Most Popular
             </div>
+          </div>
         )}
-        {isPopular && <div className={pricingCardStyles.gradientOverlay}/>}
-        <div className={pricingCardStyles.animatedBorder}>
+
+        {/* Gradient Overlay */}
+        {isPopular && <div className={pricingCardStyles.gradientOverlay} />}
+
+        {/* Animated Border - This should be separate, not wrapping content */}
+        <div className={pricingCardStyles.animatedBorder} />
+
+        {/* Main Content - This is the fix: content is now outside animatedBorder */}
         <div className={pricingCardStyles.content}>
-            <div className={pricingCardStyles.header}>
-        <h3 className={`${pricingCardStyles.title} ${
-            isPopular ? pricingCardStyles.titlePopular : pricingCardStyles.titleRegular
-        }`}>
-
-        </h3>
-        <p className={pricingCardStyles.description}>{description}</p>
-            </div>
-
-        </div>
-        <div className={pricingCardStyles.priceContainer}>
-        <div className={pricingCardStyles.priceWrapper}>
-        <span className={`${pricingCardStyles.price} ${
-            isPopular ? pricingCardStyles.pricePopular : pricingCardStyles.priceRegular
-        }`}>
-            {price}
-        </span>
-        {period && (
-            <span className={pricingCardStyles.period}>{period}</span>
-        )}
-        </div>
-        {isAnnual && (
-            <div className={pricingCardStyles.annualBadge}>Save 2-% Annualy</div>
-        )}
-        </div>
-        <ul className={pricingCardStyles.featuresList}>
-        {features.map((feature, index) => (
-          <li key={index} className={pricingCardStyles.featureItem}>
-            <div
-              className={`
-                ${pricingCardStyles.featureIcon}
-                ${
-                  isPopular
-                    ? pricingCardStyles.featureIconPopular
-                    : pricingCardStyles.featureIconRegular
-                }
-              `}
-            >
-              <svg
-                className="w-3 h-3"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={3}
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-            </div>
-            <span className={pricingCardStyles.featureText}>{feature}</span>
-          </li>
-        ))}
-      </ul>
-
-      {/* CTA area: show different button/label depending on auth state */}
-      <div style={{ marginTop: 12 }}>
-        <SignedIn>
-          <button
-            type="button"
-            onClick={() =>
-              onCtaClick && onCtaClick({ title, isPopular, isAnnual })
-            }
-            className={`
-              ${pricingCardStyles.ctaButton}
-              ${
+          {/* Header */}
+          <div className={pricingCardStyles.header}>
+            <h3
+              className={`${pricingCardStyles.title} ${
                 isPopular
-                  ? pricingCardStyles.ctaButtonPopular
-                  : pricingCardStyles.ctaButtonRegular
-              }
-            `}
-          >
-            <span
-              className={`
-                ${pricingCardStyles.ctaButtonText}
-                ${
-                  isPopular
-                    ? pricingCardStyles.ctaButtonTextPopular
-                    : pricingCardStyles.ctaButtonTextRegular
-                }
-              `}
+                  ? pricingCardStyles.titlePopular
+                  : pricingCardStyles.titleRegular
+              }`}
             >
-              {isPopular ? "Get Started" : "Choose Plan"}
-            </span>
-          </button>
-        </SignedIn>
+              {title}
+            </h3>
+            <p className={pricingCardStyles.description}>{description}</p>
+          </div>
 
-        <SignedOut>
-          <button
-            type="button"
-            onClick={() =>
-              onCtaClick &&
-              onCtaClick(
-                { title, isPopular, isAnnual },
-                { openSignInFallback: true }
-              )
-            }
-            className={`
-              ${pricingCardStyles.ctaButton}
-              ${pricingCardStyles.ctaButtonRegular}
-            `}
-          >
-            <span className={pricingCardStyles.ctaButtonText}>
-              Sign in to get started
-            </span>
-          </button>
-        </SignedOut>
-      </div>
-    
+          {/* Price Container */}
+          <div className={pricingCardStyles.priceContainer}>
+            <div className={pricingCardStyles.priceWrapper}>
+              <span
+                className={`${pricingCardStyles.price} ${
+                  isPopular
+                    ? pricingCardStyles.pricePopular
+                    : pricingCardStyles.priceRegular
+                }`}
+              >
+                {price}
+              </span>
+              {period && (
+                <span className={pricingCardStyles.period}>/{period}</span>
+              )}
+            </div>
+            {isAnnual && (
+              <div className={pricingCardStyles.annualBadge}>
+                Save 20% Annually
+              </div>
+            )}
+          </div>
 
+          {/* Features List */}
+          <ul className={pricingCardStyles.featuresList}>
+            {features.map((feature, index) => (
+              <li key={index} className={pricingCardStyles.featureItem}>
+                <div
+                  className={`${pricingCardStyles.featureIcon} ${
+                    isPopular
+                      ? pricingCardStyles.featureIconPopular
+                      : pricingCardStyles.featureIconRegular
+                  }`}
+                >
+                  <svg
+                    className="w-3 h-3"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={3}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <span className={pricingCardStyles.featureText}>{feature}</span>
+              </li>
+            ))}
+          </ul>
+
+          {/* CTA Buttons */}
+          <div style={{ marginTop: 12 }}>
+            <SignedIn>
+              <button
+                type="button"
+                onClick={() =>
+                  onCtaClick && onCtaClick({ title, isPopular, isAnnual })
+                }
+                className={`${pricingCardStyles.ctaButton} ${
+                  isPopular
+                    ? pricingCardStyles.ctaButtonPopular
+                    : pricingCardStyles.ctaButtonRegular
+                }`}
+              >
+                <span
+                  className={`${pricingCardStyles.ctaButtonText} ${
+                    isPopular
+                      ? pricingCardStyles.ctaButtonTextPopular
+                      : pricingCardStyles.ctaButtonTextRegular
+                  }`}
+                >
+                  {isPopular ? "Get Started" : "Choose Plan"}
+                </span>
+              </button>
+            </SignedIn>
+
+            <SignedOut>
+              <button
+                type="button"
+                onClick={() =>
+                  onCtaClick &&
+                  onCtaClick(
+                    { title, isPopular, isAnnual },
+                    { openSignInFallback: true }
+                  )
+                }
+                className={`${pricingCardStyles.ctaButton} ${pricingCardStyles.ctaButtonRegular}`}
+              >
+                <span className={pricingCardStyles.ctaButtonText}>
+                  Sign in to get started
+                </span>
+              </button>
+            </SignedOut>
+          </div>
         </div>
+
+        {/* Corner Accents */}
         {isPopular && (
-            <>
+          <>
             <div className={pricingCardStyles.cornerAccent1}></div>
-             <div className={pricingCardStyles.cornerAccent2}></div>
-            </>
+            <div className={pricingCardStyles.cornerAccent2}></div>
+          </>
         )}
-    </div>
-  }
+      </div>
+    );
+  };
+
   const plans = {
     monthly: [
       {
@@ -253,61 +269,78 @@ function Pricing() {
       },
     ],
   };
-  function handleCtaClick (planeMeta, flags={}){
-    if(flags.openSignInFallBack || !isSignedIn){
-        if(clerk && typeof clerk.openSignIn === "function"){
-            clerk.openSignIn({redirectUrl: "/app/create-invoice"})
-        }else{
-            navigate("/sign-in")
-        }
+
+  function handleCtaClick(planeMeta, flags = {}) {
+    if (flags.openSignInFallback || !isSignedIn) {
+      if (clerk && typeof clerk.openSignIn === "function") {
+        clerk.openSignIn({ redirectUrl: "/app/create-invoice" });
+      } else {
+        navigate("/sign-in");
+      }
     }
     navigate("/app/create-invoice", {
-        state : {fromPlan : planeMeta?.title || null}
-    })
+      state: { fromPlan: planeMeta?.title || null },
+    });
   }
+
   const currentPlans = plans[billingPeriod];
 
   return (
     <section id="pricing" className={pricingStyles.section}>
-        <div className={pricingStyles.bgElement1}></div>
-        <div className={pricingStyles.bgElement2}></div>
-        <div className={pricingStyles.bgElement3}></div>
-        <div className={pricingStyles.container}>
-            <div className={pricingStyles.headerContainer}>
-            <div className={pricingStyles.badge}>
-                <span className={pricingStyles.badgeDot}></span>
-                <span className={pricingStyles.badgeText}>Transparent Pricing </span>
-            </div>
-            <h2 className={pricingStyles.title}> 
-                Simple , {" "}
-                <span className={pricingStyles.titleGradient}>Fair Pricing</span>
-            </h2>
+      <div className={pricingStyles.bgElement1}></div>
+      <div className={pricingStyles.bgElement2}></div>
+      <div className={pricingStyles.bgElement3}></div>
+      <div className={pricingStyles.container}>
+        <div className={pricingStyles.headerContainer}>
+          <div className={pricingStyles.badge}>
+            <span className={pricingStyles.badgeDot}></span>
+            <span className={pricingStyles.badgeText}>Transparent Pricing</span>
+          </div>
+          <h2 className={pricingStyles.title}>
+            Simple,{" "}
+            <span className={pricingStyles.titleGradient}>Fair Pricing</span>
+          </h2>
 
-            <p className={pricingStyles.description}>
-                Start free, Upgrade as you grow .No hidden fees, no surprise charges.
-            </p>
-            <div className={pricingStyles.billingToggle} style={{marginTop : 12}}>
-                <button onClick={()=> setBillingPeriod("monthly")} className={`${pricingStyles.billingButton} ${
-                    billingPeriod === "monthly" ? pricingStyles.billingButtonActive : pricingStyles.billingButtonInactive
-                }`}>
-                    Monthly
-                </button>
-                <button onClick={()=> setBillingPeriod("annual")} className={`${pricingStyles.billingButton} ${
-                    billingPeriod === "annual" ? pricingStyles.billingButtonActive : pricingStyles.billingButtonInactive
-                }`}>
-                    Annual
-                    <span className={pricingStyles.billingBadge}>Save 20%</span>
-                </button>
-            </div>
-            </div>
-            <div className={pricingStyles.grid}>
-                    {currentPlans.map((plan, index)=>{
-                        <pricingCard key={plan.title} {...plan} delay={index * 100} />
-                    })}
-            </div>
+          <p className={pricingStyles.description}>
+            Start free, Upgrade as you grow. No hidden fees, no surprise charges.
+          </p>
+          <div className={pricingStyles.billingToggle} style={{ marginTop: 12 }}>
+            <button
+              onClick={() => setBillingPeriod("monthly")}
+              className={`${pricingStyles.billingButton} ${
+                billingPeriod === "monthly"
+                  ? pricingStyles.billingButtonActive
+                  : pricingStyles.billingButtonInactive
+              }`}
+            >
+              Monthly
+            </button>
+            <button
+              onClick={() => setBillingPeriod("annual")}
+              className={`${pricingStyles.billingButton} ${
+                billingPeriod === "annual"
+                  ? pricingStyles.billingButtonActive
+                  : pricingStyles.billingButtonInactive
+              }`}
+            >
+              Annual
+              <span className={pricingStyles.billingBadge}>Save 20%</span>
+            </button>
+          </div>
         </div>
+        <div className={pricingStyles.grid}>
+          {currentPlans.map((plan, index) => (
+            <PricingCard
+              key={plan.title}
+              {...plan}
+              delay={index * 100}
+              onCtaClick={handleCtaClick}
+            />
+          ))}
+        </div>
+      </div>
     </section>
-  )
+  );
 }
 
 export default Pricing;
