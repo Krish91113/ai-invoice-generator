@@ -7,6 +7,55 @@ function Pricing() {
   const clerk = useClerk();
   const { isSignedIn } = useAuth();
   const navigate = useNavigate();
+  const pricingCard =({
+    title,
+  price,
+  period,
+  description,
+  features = [],
+  isPopular = false,
+  isAnnual = false,
+  delay = 0,
+  onCtaClick,
+  })=>{
+    <div className={`${pricingCardStyles.card} ${
+        isPopular ? pricingCardStyles.cardPopular: pricingCardStyles.cardRegular
+    }`} style={`${delay}ms`}>
+        {isPopular && (
+            <div className={pricingCardStyles.popularBadge}>
+                <div className={pricingCardStyles.popularBadgeContent}>
+            Most Popular
+                </div>
+            </div>
+        )}
+        {isPopular && <div className={pricingCardStyles.gradientOverlay}/>}
+        <div className={pricingCardStyles.animatedBorder}>
+        <div className={pricingCardStyles.content}>
+            <div className={pricingCardStyles.header}>
+        <h3 className={`${pricingCardStyles.title} ${
+            isPopular ? pricingCardStyles.titlePopular : pricingCardStyles.titleRegular
+        }`}>
+
+        </h3>
+        <p className={pricingCardStyles.description}>{description}</p>
+            </div>
+
+        </div>
+        <div className={pricingCardStyles.priceContainer}>
+        <div className={pricingCardStyles.priceWrapper}>
+        <span className={`${pricingCardStyles.price} ${
+            isPopular ? pricingCardStyles.pricePopular : pricingCardStyles.priceRegular
+        }`}>
+            {price}
+        </span>
+        {period && (
+            <span className=></span>
+        )}
+        </div>
+        </div>
+        </div>
+    </div>
+  }
   const plans = {
     monthly: [
       {
@@ -112,12 +161,55 @@ function Pricing() {
     if(flags.openSignInFallBack || !isSignedIn){
         if(clerk && typeof clerk.openSignIn === "function"){
             clerk.openSignIn({redirectUrl: "/app/create-invoice"})
+        }else{
+            navigate("/sign-in")
         }
     }
+    navigate("/app/create-invoice", {
+        state : {fromPlan : planeMeta?.title || null}
+    })
   }
   const currentPlans = plans[billingPeriod];
 
-  return <div></div>;
+  return (
+    <section id="pricing" className={pricingStyles.section}>
+        <div className={pricingStyles.bgElement1}></div>
+        <div className={pricingStyles.bgElement2}></div>
+        <div className={pricingStyles.bgElement3}></div>
+        <div className={pricingStyles.container}>
+            <div className={pricingStyles.headerContainer}>
+            <div className={pricingStyles.badge}>
+                <span className={pricingStyles.badgeDot}></span>
+                <span className={pricingStyles.badgeText}>Transparent Pricing </span>
+            </div>
+            <h2 className={pricingStyles.title}> 
+                Simple , {" "}
+                <span className={pricingStyles.titleGradient}>Fair Pricing</span>
+            </h2>
+
+            <p className={pricingStyles.description}>
+                Start free, Upgrade as you grow .No hidden fees, no surprise charges.
+            </p>
+            <div className={pricingStyles.billingToggle} style={{marginTop : 12}}>
+                <button onClick={()=> setBillingPeriod("monthly")} className={`${pricingStyles.billingButton} ${
+                    billingPeriod === "monthly" ? pricingStyles.billingButtonActive : pricingStyles.billingButtonInactive
+                }`}>
+                    Monthly
+                </button>
+                <button onClick={()=> setBillingPeriod("annual")} className={`${pricingStyles.billingButton} ${
+                    billingPeriod === "annual" ? pricingStyles.billingButtonActive : pricingStyles.billingButtonInactive
+                }`}>
+                    Annual
+                    <span className={pricingStyles.billingBadge}>Save 20%</span>
+                </button>
+            </div>
+            </div>
+            <div className={pricingStyles.grid}>
+
+            </div>
+        </div>
+    </section>
+  )
 }
 
 export default Pricing;
