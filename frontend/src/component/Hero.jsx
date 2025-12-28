@@ -214,7 +214,21 @@ function Hero() {
                     <span className={heroStyles.totalValue}>₹23,740</span>
                   </div>
                 </div>
-                
+                <div className={heroStyles.actionButtons}>
+                  <button className={heroStyles.previewButton}>
+                    <span className={heroStyles.previewButtonText}>Preview</span>
+                  </button>
+                  <button className={heroStyles.sendButton}>
+                    <span className={heroStyles.sendButtonText}>Send Invoices</span>
+                  </button>
+                </div>
+              </div>
+              <div className={heroStyles.aiIndicator}>
+                  <div className={heroStyles.aiIndicatorContent}>
+                  <div className={heroStyles.aiIndicatorDot}></div>
+                  <span>AI parse from</span>
+                  <span className={heroStyles.aiIndicatorText}>"Invoice for web design - $150...."</span>
+                  </div>
               </div>
             </div>
           </div>
