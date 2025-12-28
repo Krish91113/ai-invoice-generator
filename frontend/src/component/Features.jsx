@@ -1,12 +1,39 @@
 import React from "react";
 import { featuresStyles } from "../assets/dummyStyles";
 
-const FeatureCard = ({title,desc,icon,delay = 0})=>(
-    <div className={featuresStyles.featureCard} style={{transitionDelay : `${delay}ms`} }>
-        <div className={featuresStyles.featureCardGradient}></div>
+const FeatureCard = ({ title, desc, icon, delay = 0 }) => (
+  <div
+    className={featuresStyles.featureCard}
+    style={{ transitionDelay: `${delay}ms` }}
+  >
+    <div className={featuresStyles.featureCardGradient}></div>
+    <div className={featuresStyles.featureCardBorder}></div>
+    <div className={featuresStyles.featureCardContent}></div>
+    <div className={featuresStyles.featureCardCtaIcon}>{icon}</div>
+    <div className={featuresStyles.featureCardTextContainer}>
+      <h4 className={featuresStyles.featureCardTitle}>{title}</h4>
+      <p className={featuresStyles.featureCardDescription}>{desc}</p>
 
+      <div className={featuresStyles.featureCardCta}>
+        <span className={featuresStyles.featureCardCtaText}>Learn more</span>
+        <svg
+          className={featuresStyles.featureCardCtaIcon}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 5l7 7-7 7"
+          />
+        </svg>
+      </div>
     </div>
-)
+  </div>
+);
+
 function Features() {
   const features = [
     {
@@ -73,28 +100,66 @@ function Features() {
       ),
     },
   ];
+
   return (
     <section id="features" className={featuresStyles.section}>
-      <div className={featuresStyles.backgroundBlob1}> </div>
-      <div className={featuresStyles.backgroundBlob2}> </div>
-      <div className={featuresStyles.backgroundBlob3}> </div>
+      <div className={featuresStyles.backgroundBlob1}></div>
+      <div className={featuresStyles.backgroundBlob2}></div>
+      <div className={featuresStyles.backgroundBlob3}></div>
+
       <div className={featuresStyles.container}>
         <div className={featuresStyles.headerContainer}>
           <div className={featuresStyles.badge}>
             <span className={featuresStyles.badgeDot}></span>
             <span className={featuresStyles.badgeText}>Powerful features</span>
           </div>
-          <h2 className={featuresStyles.title}>
-            Built for {" "}
-            <span className={featuresStyles.titleGradient}>Speed & Clarity</span>
-            </h2>
 
-            <p className={featuresStyles.subtitle}>
-                A minimal,intelligent interface that focuses on what truly mattrs - create,send , and track invoices effortlessly while maintaining professional excellence
-            </p>
+          <h2 className={featuresStyles.title}>
+            Built for{" "}
+            <span className={featuresStyles.titleGradient}>
+              Speed & Clarity
+            </span>
+          </h2>
+
+          <p className={featuresStyles.subtitle}>
+            A minimal, intelligent interface that focuses on what truly matters —
+            create, send, and track invoices effortlessly while maintaining
+            professional excellence.
+          </p>
         </div>
+
+        {/* FIXED RENDER */}
         <div className={featuresStyles.featuresGrid}>
-            {features.map((features, index)=>{})}
+          {features.map((feature, index) => (
+            <FeatureCard
+              key={feature.title}
+              title={feature.title}
+              desc={feature.desc}
+              icon={feature.icon}
+              delay={index * 100}
+            />
+          ))}
+        </div>
+        {/** Bottom cta section */}
+
+        <div className={featuresStyles.bottomCtaContainer}>
+          <button className={featuresStyles.bottomCtaButton}>
+            <span>{featuresStyles.bottomCtaButtonText}</span>
+             {/* Bottom CTA */}
+            <svg
+              className={featuresStyles.bottomCtaButtonIcon}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
         </div>
       </div>
     </section>
