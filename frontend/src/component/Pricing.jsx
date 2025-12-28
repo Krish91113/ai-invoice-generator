@@ -49,9 +49,12 @@ function Pricing() {
             {price}
         </span>
         {period && (
-            <span className={}></span>
+            <span className={pricingCardStyles.period}>{period}</span>
         )}
         </div>
+        {isAnnual && (
+            <div className=""></div>
+        )}
         </div>
         </div>
     </div>
