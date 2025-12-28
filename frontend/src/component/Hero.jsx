@@ -133,11 +133,46 @@ function Hero() {
               ].map((feature, index) => (
                   <div key={index} className={heroStyles.featureItem}>
                     <div className={heroStyles.featureIcon}> </div>
-                    <div className="">
-
+                    <div className={heroStyles.featureText}>
+                      <div className={heroStyles.featureLabel}>
+                {feature.label}
+                      </div>
+                      <div className={heroStyles.featureDesc}></div>
                     </div>
                   </div>
               ))}
+            </div>
+          </div>
+          {/** Right side*/}
+          <div className={heroStyles.demoColumn}>
+            <div className={heroStyles.demoFloating1}></div>
+            <div className={heroStyles.demoFloating2}></div>
+            <div className={heroStyles.demoContainer}>
+<div className={heroStyles.demoCard}>
+<div className={heroStyles.cardHeader}>
+<div className="space-y-1">
+<div className={heroStyles.cardLogoContainer}>
+<div className={heroStyles.cardLogo}>AI</div>
+<div>
+  <div className={heroStyles.cardClientName}>
+Aniket Gupta
+  </div>
+  <div className={heroStyles.cardClientGst}>
+              GST:2792AKC029
+  </div>
+</div>
+</div>
+</div>
+<div className={heroStyles.cardInvoiceInfo}
+>
+  <div className={heroStyles.cardInvoiceLabel}>Invoice</div>
+  <div className={heroStyles.cardInvoiceNumber}>
+              #INV-1023
+  </div>
+  <div className={heroStyles.cardStatus}>Paid</div>
+</div>
+</div>
+</div>
             </div>
           </div>
         </div>
