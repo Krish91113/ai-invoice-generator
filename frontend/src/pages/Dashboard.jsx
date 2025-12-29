@@ -172,7 +172,45 @@ function formatDate(dateInput) {
 				headers
 			})
 			const json = await res.json().catch(()=>null);
-			
+			/* ---------- Component (fetch from backend) ---------- */
+      if (res.status === 401) {
+        // unauthorized - prompt login
+        setError("Unauthorized. Please sign in.");
+        setStoredInvoices([]);
+        return;
+      }
+
+      if (!res.ok) {
+        const msg = json?.message || `Failed to fetch (${res.status})`;
+        throw new Error(msg);
+      }
+
+      const raw = json?.data || [];
+      const mapped = (Array.isArray(raw) ? raw : []).map((inv) => {
+        const clientObj = inv.client ?? {};
+        const amountVal = Number(inv.total ?? inv.amount ?? 0);
+        const currency = (inv.currency || "INR").toUpperCase();
+
+        return {
+          ...inv,
+          id: inv.invoiceNumber || inv._id || String(inv._id || ""),
+          client: clientObj,
+          amount: amountVal,
+          currency,
+          // keep status normalized
+          status:
+            typeof inv.status === "string"
+              ? capitalize(inv.status)
+              : inv.status || "Draft",
+        };
+      });
+      setStoredInvoices(mapped);
+    } catch (err) {
+      console.error("Failed to fetch invoices:", err);
+      setError(err?.message || "Failed to load invoices");
+      setStoredInvoices([]);
+    } 
+
 		} catch (error) {
 			
 		}
