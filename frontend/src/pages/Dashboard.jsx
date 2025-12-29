@@ -141,7 +141,16 @@ function formatDate(dateInput) {
 
 	// to obtain the token
 	const obtainToken = useCallback(async()=>{
-		
+		if(typeof getToken !== "function") return null;
+		try {
+			let token = await getToken({template: "default"}).catch(()=> null);
+			if(!token){
+				token = await getToken({forceRefresh : true}).catch(()=> null);
+			}
+			
+		} catch (error) {
+			
+		}
 	})
 	return (
 	  <div>
