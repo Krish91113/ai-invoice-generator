@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { dashboardStyles } from '../assets/dummyStyles';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@clerk/clerk-react';
 
 const API_BASE ='http://localhost:4000';
 /* normalize client object */
@@ -116,12 +118,31 @@ const EyeIcon = ({ className = "w-4 h-4" }) => (
   </svg>
 );
 
-/* small helpers */
+/* small helpers to the uppercase */
 function capitalize(s) {
   if (!s) return s;
   return String(s).charAt(0).toUpperCase() + String(s).slice(1);
 }
+/* ---------- date formatting helper: DD/MM/YYYY ---------- */
+function formatDate(dateInput) {
+  if (!dateInput) return "—";
+  const d = dateInput instanceof Date ? dateInput : new Date(String(dateInput));
+  if (Number.isNaN(d.getTime())) return "—";
+  const dd = String(d.getDate()).padStart(2, "0");
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const yyyy = d.getFullYear();
+  return `${dd}/${mm}/${yyyy}`;
+}
+
+
   const Dashboard = () =>  {
+	const navigate = useNavigate();
+	const {getToken, isSignedIn} = useAuth();
+
+	// to obtain the token
+	const obtainToken = useCallback(async()=>{
+		
+	})
 	return (
 	  <div>
 		
