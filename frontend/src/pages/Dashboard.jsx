@@ -1,9 +1,9 @@
-import React, { useCallback, useState } from 'react';
-import { dashboardStyles } from '../assets/dummyStyles';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@clerk/clerk-react';
+import React, { useCallback, useState } from "react";
+import { dashboardStyles } from "../assets/dummyStyles";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@clerk/clerk-react";
 
-const API_BASE ='http://localhost:4000';
+const API_BASE = "http://localhost:4000";
 /* normalize client object */
 function normalizeClient(raw) {
   if (!raw) return { name: "", email: "", address: "", phone: "" };
@@ -38,8 +38,6 @@ function currencyFmt(amount = 0, currency = "INR") {
 }
 
 //
-
-
 
 /* helpers to format icons */
 const TrendingUpIcon = ({ className = "w-5 h-5" }) => (
@@ -134,45 +132,47 @@ function formatDate(dateInput) {
   return `${dd}/${mm}/${yyyy}`;
 }
 
+const Dashboard = () => {
+  const navigate = useNavigate();
+  const { getToken, isSignedIn } = useAuth();
 
-  const Dashboard = () =>  {
-	const navigate = useNavigate();
-	const {getToken, isSignedIn} = useAuth();
+  // to obtain the token
+  const obtainToken = useCallback(
+    async () => {
+      if (typeof getToken !== "function") return null;
+      try {
+        let token = await getToken({ template: "default" }).catch(() => null);
+        if (!token) {
+          token = await getToken({ forceRefresh: true }).catch(() => null);
+        }
+      } catch (error) {
+        return null;
+      }
+    },
+    { getToken }
+  );
 
-	// to obtain the token
-	const obtainToken = useCallback(async()=>{
-		if(typeof getToken !== "function") return null;
-		try {
-			let token = await getToken({template: "default"}).catch(()=> null);
-			if(!token){
-				token = await getToken({forceRefresh : true}).catch(()=> null);
-			}
+  const [storedInvoices, setStoredInvoices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(true);
+  const [businessProfile, setBusinessProfile] = useState(null);
 
-		} catch (error) {
-			return null;
-		}
-	}, {getToken})
+  // fetch invoices
+  const fetchInvoices = useCallback(async () => {
+    setLoading(true);
+    setError(null);
 
-	const [storedInvoices, setStoredInvoices] = useState([]);
-	const [loading,setLoading]= useState(true);
-	const [error,setError] = useState(true);
-	const [businessProfile, setBusinessProfile] = useState(null);
+    try {
+      const token = await obtainToken();
+      const headers = { Accept: "applicatio/json" };
+      if (token) headers["Authorization"] = `Bearer ${token}`;
+      const res = await fetch(`${API_BASE}/api/invoice`, {
+        method: "GET",
+        headers,
+      });
+      const json = await res.json().catch(() => null);
 
-	// fetch invoices
-	const fetchInvoices = useCallback(async ()=>{
-		setLoading(true)
-		setError(null)
-
-		try {
-			const token = await obtainToken();
-			const headers = {Accept : "applicatio/json" };
-			if(token) headers["Authorization"] = `Bearer ${token}`
-			const res = await fetch(`${API_BASE}/api/invoice`, {
-				method : "GET",
-				headers
-			})
-			const json = await res.json().catch(()=>null);
-			/* ---------- Component (fetch from backend) ---------- */
+      /* ---------- Component (fetch from backend) ---------- */
       if (res.status === 401) {
         // unauthorized - prompt login
         setError("Unauthorized. Please sign in.");
@@ -209,18 +209,12 @@ function formatDate(dateInput) {
       console.error("Failed to fetch invoices:", err);
       setError(err?.message || "Failed to load invoices");
       setStoredInvoices([]);
-    } 
+    }
+	finally{
+		setLoading(false);
+	}
+  },{obtainToken});
+  return <div></div>;
+};
 
-		} catch (error) {
-			
-		}
-	})
-	return (
-	  <div>
-		
-	  </div>
-	);
-  }
-  
-  export default Dashboard;
-  
+export default Dashboard;
