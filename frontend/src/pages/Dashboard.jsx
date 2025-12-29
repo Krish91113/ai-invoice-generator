@@ -164,6 +164,14 @@ function formatDate(dateInput) {
 		setError(null)
 
 		try {
+			const token = await obtainToken();
+			const headers = {Accept : "applicatio/json" };
+			if(token) headers["Authorization"] = `Bearer ${token}`
+			const res = await fetch(`${API_BASE}/api/invoice`, {
+				method : "GET",
+				headers
+			})
+			const json = await res.json().catch(()=>null);
 			
 		} catch (error) {
 			
