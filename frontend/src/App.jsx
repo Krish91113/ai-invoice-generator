@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import { RedirectToSignIn, SignedIn, SignedOut } from "@clerk/clerk-react";
 import AppShell from "./component/AppShell";
 import Dashboard from "./pages/Dashboard";
+import CreateInvoice from "./pages/CreateInvoice";
 
 const ClerkProtected = ({ children }) => (
   <>
@@ -25,6 +26,7 @@ function App() {
           {/* Nested Child Routes */}
           <Route path="dashboard" element={<Dashboard />} />
           {/* You can add more here, like <Route path="invoices" element={<Invoices />} /> */}
+          <Route path="create-invoice" element={<CreateInvoice/>} />
         </Route>
       </Routes>
     </div>
