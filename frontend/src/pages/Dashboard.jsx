@@ -554,7 +554,7 @@ const Dashboard = () => {
                   </tr>
                 </thead>
                 <tbody className={dashboardStyles.tableBody}>
-                  {recent.length.map((inv) => {
+                  {recent.map((inv) => {
                     const clientName = getClientName(inv);
                     const clientInitial = getClientInitial(inv);
                     return (
@@ -568,7 +568,23 @@ const Dashboard = () => {
                             <div className={dashboardStyles.clientAvatar}>
                               {clientInitial}
                             </div>
+                            <div>
+                              <div className={dashboardStyles.clientInfo}>
+                                {clientName}
+                              </div>
+                              <div className={dashboardStyles.clientSubInfo}>
+                                {inv.id}
+                              </div>
+                            </div>
                           </div>
+                        </td>
+                        <td className={dashboardStyles.tableCell}>
+                      <div className={dashboardStyles.amountCell}>
+                      {currencyFmt(inv.amount, inv.currency)}
+                      </div>
+                        </td>
+                        <td className={dashboardStyles.tableCell}>
+
                         </td>
                       </tr>
                     );
