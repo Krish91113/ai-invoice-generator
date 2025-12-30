@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { dashboardStyles } from "../assets/dummyStyles";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
@@ -344,8 +344,10 @@ const Dashboard = () => {
 
  
   return(
-	<div>
-		
+	<div className={dashboardStyles.pageContainer}>
+    <div className="">
+
+    </div>
 	</div>
   )
 };

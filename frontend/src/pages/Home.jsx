@@ -15,6 +15,7 @@ function Home() {
           <Features />
         </div>
         <Pricing/>
+
       </main>
       <Footer/>
     </div>
