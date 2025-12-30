@@ -519,7 +519,53 @@ const Dashboard = () => {
                     Latest 5 invoices from your account
                   </p>
                 </div>
-                
+                <button
+                  onClick={() => navigate("/app/invoices")}
+                  className={dashboardStyles.tableActionButton}
+                >
+                  View All{" "}
+                  <svg
+                    className="w-4 h-4"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M5 12h14m-7-7l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div className={dashboardStyles.tableContainer}>
+              <div className={dashboardStyles.table}>
+                <thead>
+                  <tr className={dashboardStyles.tableHead}>
+                    <th className={dashboardStyles.tableHeaderCell}>
+                      Client & ID
+                    </th>
+
+                    <th className={dashboardStyles.tableHeaderCell}>Amount</th>
+                    <th className={dashboardStyles.tableHeaderCell}>Status</th>
+                    <th className={dashboardStyles.tableHeaderCell}>
+                      Due Dates
+                    </th>
+                    <th className={dashboardStyles.tableHeaderCell}>Action</th>
+                  </tr>
+                </thead>
+                <tbody className={dashboardStyles.tableBody}>
+                  {recent.length.map((inv) => {
+                    const clientName = getClientName(inv);
+                    const clientInitial = getClientInitial(inv);
+                    return (
+                      <tr
+                        key={inv.id}
+                        className={dashboardStyles.tableRow}
+                        onClick={() => openInvoice(inv)}
+                      ></tr>
+                    );
+                  })}
+                </tbody>
               </div>
             </div>
           </div>
