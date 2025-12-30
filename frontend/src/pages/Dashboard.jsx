@@ -624,6 +624,12 @@ const Dashboard = () => {
                           <div className={dashboardStyles.emptyStateMessage}>
                             No invoices yet
                           </div>
+                          <button
+                            onClick={() => navigate("/app/create-invoice")}
+                            className={dashboardStyles.emptyStateAction}
+                          >
+                            Create Your First Invoice
+                          </button>
                         </div>
                       </td>
                     </tr>
