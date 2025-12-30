@@ -148,7 +148,7 @@ function KpiCard({
           </div>
         </div>
       </div>
-      <div></div>
+      <div className={kpiCardStyles.cornerAccent}></div>
     </div>
   );
 }
