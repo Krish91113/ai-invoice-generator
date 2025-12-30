@@ -3,6 +3,7 @@ import { dashboardStyles } from "../assets/dummyStyles";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
 import KpiCard from "../component/KpiCard";
+import StatusBadge from "../component/StatusBadge";
 
 const API_BASE = "http://localhost:4000";
 /* normalize client object */
@@ -579,16 +580,54 @@ const Dashboard = () => {
                           </div>
                         </td>
                         <td className={dashboardStyles.tableCell}>
-                      <div className={dashboardStyles.amountCell}>
-                      {currencyFmt(inv.amount, inv.currency)}
-                      </div>
+                          <div className={dashboardStyles.amountCell}>
+                            {currencyFmt(inv.amount, inv.currency)}
+                          </div>
                         </td>
                         <td className={dashboardStyles.tableCell}>
-
+                          <StatusBadge
+                            status={inv.status}
+                            size="default"
+                            showIcon={true}
+                          />
+                        </td>
+                        <td className={dashboardStyles.tableCell}>
+                          <div className={dashboardStyles.dateCell}>
+                            {inv.dueDate ? formatDate(inv.dueDate) : "-"}
+                          </div>
+                        </td>
+                        <td className={dashboardStyles.tableCell}>
+                          <div className="text-right">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openInvoice(inv);
+                              }}
+                              className={dashboardStyles.actionButton}
+                            >
+                              <EyeIcon className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
+                              View
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     );
                   })}
+                  {/** if no length */}
+                  {recent.length === 0 && !loading && (
+                    <tr>
+                      <td colSpan="5" className={dashboardStyles.emptyState}>
+                        <div className={dashboardStyles.emptyStateText}>
+                          <FileTextIcon
+                            className={dashboardStyles.emptyStateIcon}
+                          />
+                          <div className={dashboardStyles.emptyStateMessage}>
+                            No invoices yet
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </div>
             </div>
