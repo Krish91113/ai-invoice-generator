@@ -562,7 +562,15 @@ const Dashboard = () => {
                         key={inv.id}
                         className={dashboardStyles.tableRow}
                         onClick={() => openInvoice(inv)}
-                      ></tr>
+                      >
+                        <td className={dashboardStyles.tableCell}>
+                          <div className="flex items-center gap-3">
+                            <div className={dashboardStyles.clientAvatar}>
+                              {clientInitial}
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
                     );
                   })}
                 </tbody>
