@@ -385,17 +385,17 @@ const Dashboard = () => {
         />
         <KpiCard
           title="Total Paid"
-          value={kpis.totalInvoices}
-          hint="Active invoices"
-          iconType="document"
-          trend={8.5}
+          value={currencyFmt(kpis.totalPaid, "INR")}
+          hint="Recieve amount (INR)"
+          iconType="revenue"
+          trend={12.2}
         />
         <KpiCard
-          title="Total Invoices"
-          value={kpis.totalInvoices}
-          hint="Active invoices"
-          iconType="document"
-          trend={8.5}
+          title="Total Unpaid"
+          value={currencyFmt(kpis.totalUnpaid, "INR")}
+          hint="Outstanding balance (INR)"
+          iconType="clock"
+          trend={-3.1}
         />
       </div>
     </div>
