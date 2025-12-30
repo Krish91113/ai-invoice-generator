@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect, useCallback } from "react";
-import StatusBadge from "../components/StatusBadge";
-import AiInvoiceModal from "../components/AiInvoiceModal";
-import GeminiIcon from "../components/GeminiIcon";
+import StatusBadge from "../component/StatusBadge";
+import AiInvoiceModal from "../component/AiInvoiceModal";
+import GeminiIcon from "../component/GeminiIcon";
 import { useNavigate } from "react-router-dom";
 import { invoicesStyles } from "../assets/dummyStyles";
 import { useAuth } from "@clerk/clerk-react";
